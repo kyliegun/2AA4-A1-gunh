@@ -19,7 +19,7 @@ public class Explorer {
         this.maze = maze;
         this.currentColumn = maze.getEntryColumn();
         this.currentRow = maze.getEntryRow();
-        this.directionIndex = 1;
+        this.directionIndex = 1; 
         this.movementPath = new ArrayList<>();
     }
 
@@ -81,7 +81,7 @@ public class Explorer {
 
     private boolean isValidMove(int[] position) {
         int row = position[0], col = position[1];
-        return row >= 0 && row < maze.getGrid().length && col >= 0 && col < maze.getGrid()[0].length && maze.getTile(col, row) == ' ';
+        return row >= 0 && col >= 0 && maze.getTile(col, row) == ' ';
     }
 
     private boolean isExit(int[] position) {
