@@ -1,9 +1,9 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Explorer {
     private static final Logger logger = LogManager.getLogger();
@@ -81,12 +81,11 @@ public class Explorer {
 
     private boolean isValidMove(int[] position) {
         int row = position[0], col = position[1];
-        return row >= 0 && row < maze.getGrid().length && col >= 0 && col < maze.getGrid()[0].length && maze.isPassage(row, col);
+        return row >= 0 && row < maze.getGrid().length && col >= 0 && col < maze.getGrid()[0].length && maze.getTile(col, row) == ' ';
     }
 
     private boolean isExit(int[] position) {
-        int[] exitPosition = maze.getExit();
-        return currentRow == exitPosition[1] && currentColumn == exitPosition[0];
+        return position[0] == maze.getExitRow() && position[1] == maze.getExitColumn();
     }
 
     private void turnRight() {
@@ -94,7 +93,7 @@ public class Explorer {
     }
 
     private void turnLeft() {
-        directionIndex = (directionIndex + 3) % 4;
+        directionIndex = (directionIndex + 3) % 4; 
     }
 
     private int[] move(int[] position) {
