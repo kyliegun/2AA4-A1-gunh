@@ -3,6 +3,9 @@ package ca.mcmaster.se2aa4.mazerunner;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.text.ParseException;
+
+import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,26 +14,55 @@ public class Main {
     private static final Logger logger = LogManager.getLogger();
 
     public static void main(String[] args) {
-        System.out.println("** Starting Maze Runner");
+        logger.info("** Starting Maze Runner");
+        Options options = new Options(); //creating option for -i flag
+        options.addOption("i", true, "Text file that contains the maze."); //required -i flag for the input maze
+        fileOption.setRequired(true);
+        options.addOption(fileOption);
+        options.addOption("p", true, "Maze path that should be verified."); //-p flag for verifying path
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cmd;
+        String inputFilePath = null;
+        String pathToVerify = null;
+
+
         try {
-            System.out.println("**** Reading the maze from file " + args[0]);
-            BufferedReader reader = new BufferedReader(new FileReader(args[0]));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                for (int idx = 0; idx < line.length(); idx++) {
-                    if (line.charAt(idx) == '#') {
-                        System.out.print("WALL ");
-                    } else if (line.charAt(idx) == ' ') {
-                        System.out.print("PASS ");
-                    }
-                }
-                System.out.print(System.lineSeparator());
-            }
-        } catch(Exception e) {
-            System.err.println("/!\\ An error has occured /!\\");
+            cmd = parser.parse(options, args); //parse command line arguments
+            inputFilePath = cmd.getOptionValue("i"); //assign maze file path
+            if (cmd.hasOption("p")){
+                pathToVerify = cmd.getOptionValue("p"); //assign the path to verify
+            } 
+        } catch (ParseException e) {
+            logger.error("Error parsing command line:  " + e.getMessage());
+            logger.error("Usage: java -jar mazerunner.jar -i <inputfile> [-p <path>]");
+            return;
         }
-        System.out.println("**** Computing path");
-        System.out.println("PATH NOT COMPUTED");
-        System.out.println("** End of MazeRunner");
+
+        try {
+            logger.info("**** Reading the maze from file" + inputFilePath);
+            Maze maze = new Maze(inputFilePath);
+            logger.info("**** Maze loaded successfully.");
+            logger.info("Entry point: (" + maze.getEntryColumn() + ", " + maze.getEntryRow() + ")");
+            logger.info("Exit point: (" + maze.getEntryColumn() + ", " + maze.getExitRow() + ")");
+
+            maze.printMaze();
+
+            if (pathToVerify != null) {
+                logger.info("**** Verifying the path: " + pathToVerify);
+                boolean pathValid = maze.verifyPath(pathToVerify);
+                if (pathValid) {
+                    logger.info("The path is valid.");
+                 } else {
+                    logger.error("The path is invalid.");
+                }
+            }
+            
+        } catch (Exception e) {
+            logger.error("/!\\ An error has occured: " + e.getMessage());
+        }
+           
+        logger.info("**** Computing path");
+        logger.info("PATH NOT COMPUTED");
+        logger.info("** End of MazeRunner");
     }
 }
