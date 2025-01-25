@@ -48,7 +48,8 @@ public class Main {
 
         try {
             logger.info("**** Reading the maze from file" + inputFilePath);
-            Maze maze = new Maze(inputFilePath);
+            Maze maze = new Maze();
+            maze.loadMaze(inputFilePath);
             logger.info("**** Maze loaded successfully.");
             logger.info("Entry point: (" + maze.getEntryColumn() + ", " + maze.getEntryRow() + ")");
             logger.info("Exit point: (" + maze.getEntryColumn() + ", " + maze.getExitRow() + ")");
