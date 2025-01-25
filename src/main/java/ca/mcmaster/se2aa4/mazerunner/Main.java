@@ -17,10 +17,8 @@ public class Main {
         logger.info("** Starting Maze Runner");
 
         Options options = new Options(); //creating option for -i flag
-
-        options.addOption("i", true, "Text file that contains the maze."); //required -i flag for the input maze
-
-        fileOption.setRequired(true);
+        Option fileOption = new Option("i", true, "Text file that contains the maze.");
+        fileOption.setRequired(true); // Set the -i flag as required
         options.addOption(fileOption);
 
         options.addOption("p", true, "Maze path that should be verified."); //-p flag for verifying path
@@ -42,7 +40,7 @@ public class Main {
             logger.error("Usage: java -jar mazerunner.jar -i <inputfile> [-p <path>]");
             return;
         }
-        
+
         if (inputFilePath == null || !new File(inputFilePath).exists()) {
             logger.error("Invalid file path: " + inputFilePath);
             return;
