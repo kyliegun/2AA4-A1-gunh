@@ -1,9 +1,9 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.text.ParseException;
+//import java.io.BufferedReader;
+//import java.io.File;
+//import java.io.FileReader;
+//import java.text.ParseException;
 
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
@@ -41,10 +41,10 @@ public class Main {
             return;
         }
 
-        if (inputFilePath == null || !new File(inputFilePath).exists()) {
-            logger.error("Invalid file path: " + inputFilePath);
-            return;
-        }
+       // if (inputFilePath == null || !new File(inputFilePath).exists()) {
+        //    logger.error("Invalid file path: " + inputFilePath);
+          //  return;
+      //  }
 
         try {
             logger.info("**** Reading the maze from file" + inputFilePath);
