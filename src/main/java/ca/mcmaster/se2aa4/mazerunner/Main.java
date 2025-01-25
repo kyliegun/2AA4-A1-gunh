@@ -15,11 +15,16 @@ public class Main {
 
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
+
         Options options = new Options(); //creating option for -i flag
+
         options.addOption("i", true, "Text file that contains the maze."); //required -i flag for the input maze
+
         fileOption.setRequired(true);
         options.addOption(fileOption);
+
         options.addOption("p", true, "Maze path that should be verified."); //-p flag for verifying path
+        
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
         String inputFilePath = null;
@@ -35,6 +40,11 @@ public class Main {
         } catch (ParseException e) {
             logger.error("Error parsing command line:  " + e.getMessage());
             logger.error("Usage: java -jar mazerunner.jar -i <inputfile> [-p <path>]");
+            return;
+        }
+        
+        if (inputFilePath == null || !new File(inputFilePath).exists()) {
+            logger.error("Invalid file path: " + inputFilePath);
             return;
         }
 
@@ -56,7 +66,7 @@ public class Main {
                     logger.error("The path is invalid.");
                 }
             }
-            
+
         } catch (Exception e) {
             logger.error("/!\\ An error has occured: " + e.getMessage());
         }
