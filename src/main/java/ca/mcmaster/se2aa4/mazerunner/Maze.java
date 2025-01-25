@@ -23,7 +23,7 @@ public class Maze {
         String[] lines = mazeDataBuilder.toString().split("\n");
         grid = new char[lines.length][lines[0].length()];
 
-        //Store each line in a 2D char array (grid)
+        //Store each line in a 2D char array 
         for (int i = 0; i < lines.length; i++) {
             grid[i] = lines[i].toCharArray();
         }
