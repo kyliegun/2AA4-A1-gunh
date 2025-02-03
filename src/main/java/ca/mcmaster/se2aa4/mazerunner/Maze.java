@@ -25,40 +25,40 @@ public class Maze {
         } catch (IOException e) {
             throw new RuntimeException("Unable to read maze file: " + e.getMessage());
         }
-    
-        if (lines.isEmpty()) { 
-            throw new IllegalStateException("Maze file is empty: " + mazeFile);
-        }
-    
         return lines;
     }
-    
 
     public void setEntryPoint() {
-        this.entryPoint = grid.findEntrance(); // Automatically finds the first open space
-        System.out.println("Entrance found at: " + entryPoint[0] + "," + entryPoint[1]);
+        this.entryPoint = grid.findEntrance();
         setExitPoint();
-    }
-    
-
-    public int[] getEntryPoint() {
-        return this.entryPoint;
     }
 
     public void setExitPoint() {
-        int[] potentialExit = grid.findFarthestOpenSpace(entryPoint);
-    
-        if (entryPoint[0] == potentialExit[0] && entryPoint[1] == potentialExit[1]) {
-            throw new IllegalStateException("Maze entrance and exit cannot be the same.");
-        }
-        
-        this.exitPoint = potentialExit;
+        this.exitPoint = grid.findFarthestOpenSpace(entryPoint);
     }
     
-    
+    public int[] getEntryPoint() {
+        return entryPoint;
+    }
 
     public int[] getExitPoint() {
-        return this.exitPoint;
+        return exitPoint;
+    }
+
+    public int getEntryRow() {
+        return entryPoint[0];
+    }
+
+    public int getEntryColumn() {
+        return entryPoint[1];
+    }
+
+    public int getExitRow() {
+        return exitPoint[0];
+    }
+
+    public int getExitColumn() {
+        return exitPoint[1];
     }
 
     public int getWidth() {
