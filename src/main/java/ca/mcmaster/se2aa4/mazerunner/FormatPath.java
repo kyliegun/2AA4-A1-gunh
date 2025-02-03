@@ -1,25 +1,35 @@
+/**
+ * Kylie Gun
+ * Assignment 1 MazeRunner 2AA4 - Winter 2025
+ * 400524717
+ */
+
 package ca.mcmaster.se2aa4.mazerunner;
 
+//Handles path formatting
 public class FormatPath {
     private String expandedPath;
     private String compressedPath;
 
+    //expands a compressed path
     public void setExpandedPath(String path) {
-        this.expandedPath = expandPath(path);
+        this.expandedPath = expandPath(path); 
     }
 
     public String getExpandedPath() {
-        return this.expandedPath;
+        return this.expandedPath; //returns expanded path
     }
 
+    //compresses the path sequence
     public void setCompressedPath(String expandedPath) {
         this.compressedPath = compressPath(expandedPath);
     }
 
     public String getCompressedPath() {
-        return this.compressedPath;
+        return this.compressedPath; //returns this sequence
     }
 
+    //converts one form to the other
     private String expandPath(String path) {
         StringBuilder result = new StringBuilder();
         int repeatCount = 0;
@@ -35,6 +45,7 @@ public class FormatPath {
         return result.toString();
     }
 
+    //converts one form to the other
     private String compressPath(String path) {
         StringBuilder result = new StringBuilder();
         int count = 1;
