@@ -4,47 +4,103 @@
  * 400524717
  */
 
+// package ca.mcmaster.se2aa4.mazerunner;
+
+// import java.util.*;
+
+// public class DirectionAnalyzer {
+//     private Direction currentDirection;
+//     private int[] position;
+//     private Maze maze;
+//     private List<MoveObserver> observers = new ArrayList<>();
+
+//     private static final Map<Character, Direction> directionLookup = new HashMap<>();
+
+//     static {
+//         directionLookup.put('N', Direction.NORTH);
+//         directionLookup.put('E', Direction.EAST);
+//         directionLookup.put('S', Direction.SOUTH);
+//         directionLookup.put('W', Direction.WEST);
+//     }
+
+//     public DirectionAnalyzer(char startingDirection, Maze maze, int[] entrance) {
+//         this.currentDirection = initializeDirection(startingDirection);
+//         this.position = entrance;
+//         this.maze = maze;
+//         notifyObservers();
+//     }
+
+//     private Direction initializeDirection(char direction) {
+//         if (directionLookup.containsKey(direction)) {
+//             return directionLookup.get(direction);
+//         }
+//         throw new IllegalArgumentException("Invalid starting direction: " + direction);
+//     }
+
+//     public void processMove(char move) {
+//         switch (move) {
+//             case 'L' -> currentDirection = currentDirection.rotateCounterClockwise();
+//             case 'R' -> currentDirection = currentDirection.rotateClockwise();
+//             case 'F' -> moveForward();
+//             default -> throw new IllegalArgumentException("Invalid move: " + move);
+//         }
+//         notifyObservers();
+//     }
+
+//     private void moveForward() {
+//         currentDirection.moveForward(position, maze);
+//     }
+
+//     public char getFacingDirection() {
+//         return currentDirection.name().charAt(0);
+//     }
+
+//     public int getFacingDirectionValue() {
+//         return currentDirection.getValue();
+//     }
+
+//     public int[] getPosition() {
+//         return this.position;
+//     }
+
+//     public void addObserver(MoveObserver observer) {
+//         observers.add(observer);
+//     }
+
+//     public void removeObserver(MoveObserver observer) {
+//         observers.remove(observer);
+//     }
+
+//     private void notifyObservers() {
+//         for (MoveObserver observer : observers) {
+//             observer.update(position.clone(), getFacingDirection());
+//         }
+//     }
+// }
+
 package ca.mcmaster.se2aa4.mazerunner;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-//This class manages movement and orientation within the maze
-public class DirectionAnalyzer {
-    private Direction currentDirection; //direction that the explorer is facing
-    private int[] position; //current position in the maze
+public class DirectionAnalyzer implements Subject {
+    private Direction currentDirection;
+    private int[] position;
     private Maze maze;
+    private List<MoveObserver> observers = new ArrayList<>();
 
-    //Lookup table to map direction chars
-    private static final Map<Character, Direction> directionLookup = new HashMap<>();
+    private static final Map<Character, Direction> directionLookup = Map.of(
+        'N', Direction.NORTH,
+        'E', Direction.EAST,
+        'S', Direction.SOUTH,
+        'W', Direction.WEST
+    );
 
-    static {
-        directionLookup.put('N', Direction.NORTH);
-        directionLookup.put('E', Direction.EAST);
-        directionLookup.put('S', Direction.SOUTH);
-        directionLookup.put('W', Direction.WEST);
-    }
-
-    /**
-     * Constructs a DirectionAnalyzer with an initial direction, maze reference, and starting position
-     * 
-     * @param startingDirection The initial direction the explorer faces
-     * @param maze The maze in which the explorer navigates
-     * @param entrance The starting position of the explorer in the maze
-     */
     public DirectionAnalyzer(char startingDirection, Maze maze, int[] entrance) {
         this.currentDirection = initializeDirection(startingDirection);
         this.position = entrance;
         this.maze = maze;
     }
 
-    /**
-     * Maps a character direction to a corresponding direction enum
-     * 
-     * @param direction The character representing the initial direction
-     * @return The corresponding Direction enum
-     * @throws IllegalArgumentException if an invalid direction is provided
-     */
     private Direction initializeDirection(char direction) {
         if (directionLookup.containsKey(direction)) {
             return directionLookup.get(direction);
@@ -54,31 +110,44 @@ public class DirectionAnalyzer {
 
     public void processMove(char move) {
         switch (move) {
-            case 'L' -> currentDirection = currentDirection.rotateCounterClockwise(); //Turns left
-            case 'R' -> currentDirection = currentDirection.rotateClockwise(); //Turns right
-            case 'F' -> moveForward(); //Moves forward
+            case 'L' -> currentDirection = currentDirection.rotateCounterClockwise();
+            case 'R' -> currentDirection = currentDirection.rotateClockwise();
+            case 'F' -> moveForward();
             default -> throw new IllegalArgumentException("Invalid move: " + move);
         }
+        notifyObservers(move);
     }
 
-    private void moveForward() { //Moving forward in whatever current direction
+    private void moveForward() {
         currentDirection.moveForward(position, maze);
     }
 
-    public char getFacingDirection() { //Retrieves current facing direction
+    public char getFacingDirection() {
         return currentDirection.name().charAt(0);
     }
 
-    public int getFacingDirectionValue() { //Retrieves numerical value
+    public int getFacingDirectionValue() {
         return currentDirection.getValue();
     }
 
-    public int[] getPosition() { //Retrieves current position
+    public int[] getPosition() {
         return this.position;
     }
 
-    // public DirectionAnalyzer(int[] startPos) {
-    //     this.currentPosition = startPos.clone();
-    //     this.facingDirection = 'E';
-    // }
+    @Override
+    public void addObserver(MoveObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(MoveObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(char move) {
+        for (MoveObserver obs : observers) {
+            obs.onMove(move, position.clone(), getFacingDirection());
+        }
+    }
 }
