@@ -4,94 +4,66 @@
  * 400524717
  */
 
-package ca.mcmaster.se2aa4.mazerunner;
+ package ca.mcmaster.se2aa4.mazerunner;
 
-//Enum representing movement directions
-public enum Direction {
-    NORTH(0) {
-        @Override
-        public void moveForward(int[] position, Maze maze) {
-            int row = position[0];
-            int col = position[1];
-            //Move up if the tile is open
-            if (row - 1 >= 0 && maze.getCell(row - 1, col) == ' ') {
-                position[0] = row - 1;
-            }
-        }
-    },
-
-    EAST(1) {
-        @Override
-        public void moveForward(int[] position, Maze maze) {
-            int row = position[0];
-            int col = position[1];
-            //Move right if the tile is open
-            if (col + 1 < maze.getWidth() && maze.getCell(row, col + 1) == ' ') {
-                position[1] = col + 1;
-            }
-        }
-    },
-
-    SOUTH(2) {
-        @Override
-        public void moveForward(int[] position, Maze maze) {
-            int row = position[0];
-            int col = position[1];
-            //Move down if the tile is open
-            if (row + 1 < maze.getHeight() && maze.getCell(row + 1, col) == ' ') {
-                position[0] = row + 1;
-            }
-        }
-    },
-
-    WEST(3) {
-        @Override
-        public void moveForward(int[] position, Maze maze) {
-            int row = position[0];
-            int col = position[1];
-            //move left if the tile is open
-            if (col - 1 >= 0 && maze.getCell(row, col - 1) == ' ') {
-                position[1] = col - 1;
-            }
-        }
-    };
-
-    //stores an integer of the direction
-    private int ordinalValue;
-
-    Direction(int ordinalValue) {
-        this.ordinalValue = ordinalValue;  //assigns an integer representation for the direction
-    }
-
-    public int getValue() {
-        return this.ordinalValue;
-    }
-
-    public Direction[] getAllDirections() {
-        return values();
-    }
-
-    public Direction initializeDirection(char startingDirection) {
-        Direction[] allDirections = getAllDirections();
-        //looping through all directions to find the matching one
-        for (Direction direction : allDirections) {
-            if (direction.name().charAt(0) == startingDirection) {
-                return direction;
-            }
-        }
-        throw new IllegalArgumentException("Invalid starting direction: " + startingDirection);
-    }
-
-    public Direction rotateCounterClockwise() {
-        int newIndex = (this.ordinalValue + 3) % 4; //rotates left
-        return getAllDirections()[newIndex];
-    }  
-
-    public Direction rotateClockwise() {
-        int newIndex = (this.ordinalValue + 1) % 4; //rotates right
-        return getAllDirections()[newIndex];
-    }  
-
-    public abstract void moveForward(int[] currentPosition, Maze maze);  //abstract method for movement, moves forward based on current direction
-}  
-  
+ import java.util.Map;
+ import java.util.HashMap;
+ 
+ public enum Direction {
+     NORTH(0, -1, 0),
+     EAST(1, 0, 1),
+     SOUTH(2, 1, 0),
+     WEST(3, 0, -1);
+ 
+     private final int value;
+     private final int rowOffset;
+     private final int colOffset;
+ 
+     private static final Direction[] VALUES = values();
+     private static final Map<Character, Direction> CHAR_LOOKUP = new HashMap<>();
+ 
+     static {
+         for (Direction dir : VALUES) {
+             CHAR_LOOKUP.put(dir.name().charAt(0), dir); // 'N', 'E', etc.
+         }
+     }
+ 
+     Direction(int value, int rowOffset, int colOffset) {
+         this.value = value;
+         this.rowOffset = rowOffset;
+         this.colOffset = colOffset;
+     }
+ 
+     public int getValue() {
+         return this.value;
+     }
+ 
+     public static Direction fromChar(char c) {
+         Direction dir = CHAR_LOOKUP.get(Character.toUpperCase(c));
+         if (dir == null) {
+             throw new IllegalArgumentException("Invalid direction: " + c);
+         }
+         return dir;
+     }
+ 
+     public Direction turnClockwise() {
+         return VALUES[(this.value + 1) % 4];
+     }
+ 
+     public Direction turnCounterClockwise() {
+         return VALUES[(this.value + 3) % 4];
+     }
+ 
+     public void moveForward(int[] position, Maze maze) {
+         int newRow = position[0] + rowOffset;
+         int newCol = position[1] + colOffset;
+ 
+         if (newRow >= 0 && newRow < maze.getHeight() &&
+             newCol >= 0 && newCol < maze.getWidth() &&
+             maze.getCell(newRow, newCol) == ' ') {
+ 
+             position[0] = newRow;
+             position[1] = newCol;
+         }
+     }
+ } 

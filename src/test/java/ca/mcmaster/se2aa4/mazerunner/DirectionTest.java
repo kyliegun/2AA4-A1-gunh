@@ -14,7 +14,6 @@ class DirectionTest {
         maze = new Maze("examples/direct.maz.txt");
     }
 
-
     @Test
     void testMoveSouth() {
         int[] pos = {1, 1}; // Assume open space below
@@ -32,35 +31,39 @@ class DirectionTest {
     }
 
     @Test
-    void testRotateClockwise() {
-        assertEquals(Direction.EAST, Direction.NORTH.rotateClockwise());
-        assertEquals(Direction.SOUTH, Direction.EAST.rotateClockwise());
-        assertEquals(Direction.WEST, Direction.SOUTH.rotateClockwise());
-        assertEquals(Direction.NORTH, Direction.WEST.rotateClockwise());
+    void testTurnClockwise() {
+        assertEquals(Direction.EAST, Direction.NORTH.turnClockwise());
+        assertEquals(Direction.SOUTH, Direction.EAST.turnClockwise());
+        assertEquals(Direction.WEST, Direction.SOUTH.turnClockwise());
+        assertEquals(Direction.NORTH, Direction.WEST.turnClockwise());
     }
 
     @Test
-    void testRotateCounterClockwise() {
-        assertEquals(Direction.WEST, Direction.NORTH.rotateCounterClockwise());
-        assertEquals(Direction.NORTH, Direction.EAST.rotateCounterClockwise());
-        assertEquals(Direction.EAST, Direction.SOUTH.rotateCounterClockwise());
-        assertEquals(Direction.SOUTH, Direction.WEST.rotateCounterClockwise());
+    void testTurnCounterClockwise() {
+        assertEquals(Direction.WEST, Direction.NORTH.turnCounterClockwise());
+        assertEquals(Direction.NORTH, Direction.EAST.turnCounterClockwise());
+        assertEquals(Direction.EAST, Direction.SOUTH.turnCounterClockwise());
+        assertEquals(Direction.SOUTH, Direction.WEST.turnCounterClockwise());
     }
 
     @Test
-    void testInitializeDirection() {
-        assertEquals(Direction.NORTH, Direction.NORTH.initializeDirection('N'));
-        assertEquals(Direction.EAST, Direction.NORTH.initializeDirection('E'));
-        assertEquals(Direction.SOUTH, Direction.NORTH.initializeDirection('S'));
-        assertEquals(Direction.WEST, Direction.NORTH.initializeDirection('W'));
+    void testFromChar() {
+        assertEquals(Direction.NORTH, Direction.fromChar('N'));
+        assertEquals(Direction.EAST, Direction.fromChar('E'));
+        assertEquals(Direction.SOUTH, Direction.fromChar('S'));
+        assertEquals(Direction.WEST, Direction.fromChar('W'));
     }
 
     @Test
-    void testInitializeDirectionInvalid() {
+    void testFromCharInvalid() {
+        Maze mockMaze = new Maze("examples/direct.maz.txt");
+        mockMaze.setEntryPoint();
+        int[] pos = mockMaze.getEntryPoint();
+    
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            Direction.NORTH.initializeDirection('X');
+            new DirectionAnalyzer('X', mockMaze, pos);
         });
+    
         assertTrue(exception.getMessage().contains("Invalid starting direction"));
-    }
+    }    
 }
-

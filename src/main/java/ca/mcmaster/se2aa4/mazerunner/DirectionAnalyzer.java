@@ -30,7 +30,7 @@
          this.maze = maze;
      }
  
-     private Direction initializeDirection(char direction) {
+     public Direction initializeDirection(char direction) {
          if (directionLookup.containsKey(direction)) {
              return directionLookup.get(direction);
          }
