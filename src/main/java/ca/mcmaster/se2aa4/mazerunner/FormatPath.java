@@ -33,7 +33,7 @@ public class FormatPath {
         return this.compressedPath;
     }
 
-    // Converts compressed path (e.g. 3F2R) to expanded form (e.g. FFFRR)
+    // Converts compressed path 
     private String expandPath(String path) {
         StringBuilder result = new StringBuilder();
         Pattern pattern = Pattern.compile("(\\d*)([FRL])");
@@ -49,7 +49,7 @@ public class FormatPath {
         return result.toString();
     }
 
-    // Converts expanded path (e.g. FFFRR) to compressed form (e.g. 3F2R)
+    // Converts expanded path 
     private String compressPath(String path) {
         StringBuilder result = new StringBuilder();
         int count = 1;
