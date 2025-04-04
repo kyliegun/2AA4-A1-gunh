@@ -29,6 +29,9 @@ public class PathValidator implements MazeNavigator {
     //returns whether the sequence reaches the maze exit or not
     @Override
     public String retrievePath() {
-        return directionAnalyzer.getPosition().equals(maze.getExitPoint()) ? "correct path" : "incorrect path";
+        // return directionAnalyzer.getPosition().equals(maze.getExitPoint()) ? "correct path" : "incorrect path";
+        int[] pos = directionAnalyzer.getPosition();
+        int[] exit = maze.getExitPoint();
+        return (pos[0] == exit[0] && pos[1] == exit[1]) ? "correct path" : "incorrect path";
     }
 }

@@ -6,46 +6,50 @@
 
 package ca.mcmaster.se2aa4.mazerunner;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 //Handles path formatting
 public class FormatPath {
     private String expandedPath;
     private String compressedPath;
 
-    //expands a compressed path
+    // expands a compressed path like 3F2R into FFFRR
     public void setExpandedPath(String path) {
-        this.expandedPath = expandPath(path); 
+        this.expandedPath = expandPath(path.replaceAll("\\s+", ""));
+
     }
 
     public String getExpandedPath() {
-        return this.expandedPath; //returns expanded path
+        return this.expandedPath;
     }
 
-    //compresses the path sequence
+    // compresses a path like FFFRR into 3F2R
     public void setCompressedPath(String expandedPath) {
         this.compressedPath = compressPath(expandedPath);
     }
 
     public String getCompressedPath() {
-        return this.compressedPath; //returns this sequence
+        return this.compressedPath;
     }
 
-    //converts one form to the other
+    // Converts compressed path (e.g. 3F2R) to expanded form (e.g. FFFRR)
     private String expandPath(String path) {
         StringBuilder result = new StringBuilder();
-        int repeatCount = 0;
+        Pattern pattern = Pattern.compile("(\\d*)([FRL])");
+        Matcher matcher = pattern.matcher(path.replaceAll("\\s+", "")); // remove spaces
 
-        for (char ch : path.toCharArray()) {
-            if (Character.isDigit(ch)) {
-                repeatCount = repeatCount * 10 + Character.getNumericValue(ch);
-            } else {
-                result.append(String.valueOf(ch).repeat(Math.max(1, repeatCount)));
-                repeatCount = 0;
-            }
+        while (matcher.find()) {
+            String countStr = matcher.group(1);
+            char move = matcher.group(2).charAt(0);
+            int count = countStr.isEmpty() ? 1 : Integer.parseInt(countStr);
+            result.append(String.valueOf(move).repeat(count));
         }
+
         return result.toString();
     }
 
-    //converts one form to the other
+    // Converts expanded path (e.g. FFFRR) to compressed form (e.g. 3F2R)
     private String compressPath(String path) {
         StringBuilder result = new StringBuilder();
         int count = 1;

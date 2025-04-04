@@ -76,4 +76,9 @@ public class DirectionAnalyzer {
     public int[] getPosition() { //Retrieves current position
         return this.position;
     }
+
+    // public DirectionAnalyzer(int[] startPos) {
+    //     this.currentPosition = startPos.clone();
+    //     this.facingDirection = 'E';
+    // }
 }

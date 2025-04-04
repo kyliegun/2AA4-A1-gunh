@@ -6,6 +6,8 @@
 
 package ca.mcmaster.se2aa4.mazerunner;
 
+import java.util.Arrays;
+
 //Controls excecution of the strategy
 public class MazeSolver implements MazeNavigator {
     private final Maze maze; //maze that will be solved
@@ -25,6 +27,7 @@ public class MazeSolver implements MazeNavigator {
     public void navigateMaze() {
         strategy.computeRoute(maze, directionAnalyzer);
         this.pathResult = strategy.fetchRoute();
+
     }
 
     //returns the path after solving the maze

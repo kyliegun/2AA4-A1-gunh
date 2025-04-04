@@ -81,6 +81,10 @@ public class Maze {
         return grid.getHeight();
     }
 
+    public int[] getStartPoint() {
+        return this.entryPoint;
+    }    
+
     //retrieves the char at a specific position in the maze 
     public char getCell(int row, int column) {
         return grid.getCell(row, column);

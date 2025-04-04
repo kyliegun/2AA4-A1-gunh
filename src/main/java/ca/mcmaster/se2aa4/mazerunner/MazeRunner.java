@@ -6,6 +6,8 @@
 
 package ca.mcmaster.se2aa4.mazerunner;
 
+import java.util.Arrays;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,10 +28,23 @@ public class MazeRunner {
 
     public void verifyPath(String moveSequence) {
         logger.info("Verifying provided path...");
-        formatter.setExpandedPath(moveSequence);
-        MazeNavigator verifier = new PathValidator(maze, directionAnalyzer, formatter.getExpandedPath());
-        verifier.navigateMaze(); //excecuting verification process
+    
+        // Remove all whitespace (including newlines) and trim
+        moveSequence = moveSequence.trim().replaceAll("\\s+", "");
+    
+        formatter.setExpandedPath(moveSequence.trim().replaceAll("\\s+", ""));
+        MazeNavigator verifier = new PathValidator(
+            maze,
+            new DirectionAnalyzer('E', maze, maze.getEntryPoint()),
+            formatter.getExpandedPath()
+        );
+
+        verifier.navigateMaze();
         System.out.println(verifier.retrievePath());
+    }
+    
+    private String formatPosition(int[] pos) {
+        return "(" + pos[0] + ", " + pos[1] + ")";
     }
 
     //computes path using the right hand algorithm
@@ -37,7 +52,10 @@ public class MazeRunner {
         logger.info("Computing optimal path...");
         MazeNavigator solver = new MazeSolver(maze, directionAnalyzer, new RightHandSolver());
         solver.navigateMaze(); //solving maze by navigating through it
+
         formatter.setCompressedPath(solver.retrievePath()); //converting the path to cannonical format
         System.out.println(formatter.getCompressedPath()); //printing the compressed format of the path
+
     }
 }
+
